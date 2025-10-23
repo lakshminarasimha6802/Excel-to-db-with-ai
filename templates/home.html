@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% if user %}
+  {% set page_title = "Home" %}
+{% else %}
+  {% set page_title = "Create your account" %}
+{% endif %}
+
+{% block content %}
+
+{% if not user %}
+  <!-- Landing: show Register on Home -->
+  <section class="panel">
+    <h1>Create your account</h1>
+    <p class="muted">Already have an account? <a href="/login">Login here</a>.</p>
+    <form method="post" action="/register" class="grid">
+      <label>Name
+        <input type="text" name="name" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" required>
+      </label>
+      <button class="btn primary" type="submit">Register</button>
+      <a class="btn" href="/login">I already have an account</a>
+    </form>
+  </section>
+{% else %}
+  <!-- Authenticated: show your existing Home content -->
+  <section class="panel">
+    <h1>Upload Excel/CSV</h1>
+    <p>Supported: .xlsx, .xls, .csv. Max ~20MB recommended.</p>
+    <form action="/upload" method="post" enctype="multipart/form-data" class="grid">
+      <input type="file" name="file" accept=".xlsx,.xls,.csv" required />
+      <button class="btn primary" type="submit">Upload & Preview</button>
+    </form>
+  </section>
+
+  {% if message %}
+    <div class="toast {{ level|default('info') }}">{{ message }}</div>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Recent uploads</h2>
+    {% if uploads and uploads|length > 0 %}
+      <div class="scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Original name</th>
+              <th>Saved file</th>
+              <th>Size</th>
+              <th>Uploaded at (UTC)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for u in uploads %}
+            <tr>
+              <td title="{{ u.original_name }}">{{ u.original_name }}</td>
+              <td><code>{{ u.saved_filename }}</code></td>
+              <td>
+                {% set kb = (u.size_bytes // 1024) %}
+                {{ kb }} KB
+              </td>
+              <td><small>{{ u.uploaded_at }}</small></td>
+              <td style="white-space:nowrap;">
+                <form action="/upload" method="post" style="display:inline;">
+                  <input type="hidden" name="file_path" value="{{ u.saved_filename }}">
+                  <button class="btn" type="submit">Preview / Import</button>
+                </form>
+                <form action="/delete-upload" method="post" style="display:inline;margin-left:6px;"
+                      onsubmit="return confirm('Delete this upload and its temp files?');">
+                  <input type="hidden" name="file_path" value="{{ u.saved_filename }}">
+                  <button class="btn" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No uploads yet. Use the form above to upload a file.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Tables in database</h2>
+    {% if tables and tables|length > 0 %}
+      <div class="scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Table</th>
+              <th>Rows</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for t in tables %}
+            <tr>
+              <td><code>{{ t.name }}</code></td>
+              <td>{{ t.rows }}</td>
+              <td style="white-space:nowrap;">
+                <a class="btn" href="/browse/{{ t.name }}">Browse</a>
+                <a class="btn" href="/insights/{{ t.name }}">Insights</a>
+                <a class="btn" href="/anomalies/{{ t.name }}">Anomalies</a>
+                <a class="btn" href="/export/{{ t.name }}?format=xlsx">Export XLSX</a>
+                <form action="/delete-table" method="post" style="display:inline;margin-left:6px;"
+                      onsubmit="return confirm('Delete table {{ t.name }}? This cannot be undone.');">
+                  <input type="hidden" name="table_name" value="{{ t.name }}">
+                  <button class="btn" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No tables found yet. Import an upload to create a table.</p>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% endblock %}

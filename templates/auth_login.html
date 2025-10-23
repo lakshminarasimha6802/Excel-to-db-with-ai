@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% set page_title = "Login" %}
+{% block content %}
+<section class="panel">
+  <h2>Login</h2>
+  <form method="post" action="/login" class="grid">
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password <input type="password" name="password" required></label>
+    <input type="hidden" name="next" value="{{ request.query_params.get('next','/dashboard') }}">
+    <button class="btn primary" type="submit">Login</button>
+  </form>
+  <p class="muted">No account? <a href="/register">Register</a></p>
+</section>
+{% endblock %}

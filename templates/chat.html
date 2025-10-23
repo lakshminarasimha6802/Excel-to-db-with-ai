@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set page_title = "Chat with Your Data" %}
+{% block content %}
+<section class="panel">
+  <h2>Ask questions about your tables</h2>
+  {% if not has_key %}
+    <div class="toast warn">OpenAI key not set. Add <code>OPENAI_API_KEY</code> to your environment and restart the server.</div>
+  {% endif %}
+  <p class="muted">Example: “Show top 5 rows from <code>sales_q1_2025</code> sorted by revenue”</p>
+  <form class="grid">
+    <label>Question
+      <input type="text" placeholder="e.g., average age by department from employees">
+    </label>
+    <button class="btn primary" type="button" disabled>Send</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Preview ({{ rows }} rows, {{ cols }} columns)</h2>
+
+  <div class="row">
+    {% if file_path %}
+      <form action="/upload" method="post" style="display:inline;">
+        <input type="hidden" name="file_path" value="{{ file_path }}">
+        <button class="btn" type="submit">↩ Change sheet</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <div class="scroll">
+    {{ preview_html | safe }}
+  </div>
+
+  <form action="/import" method="post" class="grid">
+    <input type="hidden" name="tmp_parquet" value="{{ tmp_parquet }}">
+    <label>
+      <span>Table name</span>
+      <input type="text" name="table_name" value="{{ suggested_table }}" required />
+    </label>
+    <button class="btn primary" type="submit">Import to Database</button>
+    <a class="btn" href="/">Cancel</a>
+  </form>
+</section>
+{% endblock %}

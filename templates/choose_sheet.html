@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Select Sheet</h2>
+  <p>File: <strong>{{ file_name }}</strong></p>
+
+  <form action="/upload" method="post" enctype="multipart/form-data" class="grid">
+    <!-- Reuse the saved upload by passing its path -->
+    <input type="hidden" name="file_path" value="{{ file_path }}">
+    <label>
+      <span>Choose Sheet</span>
+      <select name="sheet_name" required>
+        {% for s in sheets %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button class="btn primary" type="submit">Preview Sheet</button>
+    <a class="btn" href="/">Cancel</a>
+  </form>
+</section>
+{% endblock %}

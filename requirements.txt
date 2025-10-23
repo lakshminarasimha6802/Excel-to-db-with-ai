@@ -1,0 +1,15 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+jinja2==3.1.4
+python-multipart==0.0.9
+itsdangerous==2.2.0
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.2
+matplotlib==3.9.2
+sqlalchemy==2.0.35
+openpyxl==3.1.5
+pyarrow==21.0.0
+passlib[bcrypt]==1.7.4
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1

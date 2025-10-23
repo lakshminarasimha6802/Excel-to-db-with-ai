@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Browse: {{ table_name }}</h2>
+
+  <form method="get" class="row">
+    <input type="text" name="q" placeholder="Search" value="{{ q }}">
+    <input type="hidden" name="page" value="1">
+    <button class="btn">Search</button>
+    <a class="btn" href="/enter/{{ table_name }}">+ Add Row</a>
+    <a class="btn" href="/export/{{ table_name }}?format=csv">Export CSV</a>
+    <a class="btn" href="/export/{{ table_name }}?format=xlsx">Export XLSX</a>
+  </form>
+
+  <div class="scroll">
+    {% if rows and rows|length > 0 %}
+      <table class="table">
+        <thead>
+          <tr>
+            {% for k in rows[0].keys() %}
+              <th>{{ k }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr>
+              {% for v in r.values() %}
+                <td>{{ v }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No rows found.</p>
+    {% endif %}
+  </div>
+
+  <div class="row">
+    {% if page|int > 1 %}
+      <a class="btn" href="?page={{ page|int - 1 }}&page_size={{ page_size }}&q={{ q }}">← Prev</a>
+    {% endif %}
+    <a class="btn" href="?page={{ page|int + 1 }}&page_size={{ page_size }}&q={{ q }}">Next →</a>
+  </div>
+</section>
+{% endblock %}

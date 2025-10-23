@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set page_title = "Insights: " ~ table_name %}
+{% block content %}
+<section class="panel">
+  <h2>Summary</h2>
+  <div class="scroll">{{ summary_html | safe }}</div>
+</section>
+<section class="panel">
+  <h2>Quick Charts</h2>
+  {% if plots and plots|length %}
+    <div class="grid grid-2">
+      {% for p in plots %}
+        <img src="{{ p }}" alt="plot" style="width:100%;border-radius:10px;border:1px solid var(--border);">
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No numeric columns to chart.</p>
+  {% endif %}
+</section>
+{% endblock %}

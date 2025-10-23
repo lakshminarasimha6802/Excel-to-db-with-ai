@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h2>Add Row to {{ table_name }}</h2>
+  <form method="post" class="grid grid-2">
+    {% for c in columns %}
+      <label>
+        <span>{{ c.name }} <small>({{ c.type }})</small></span>
+        <input type="text" name="{{ c.name }}" />
+      </label>
+    {% endfor %}
+    <button class="btn primary" type="submit">Save Row</button>
+    <a class="btn" href="/browse/{{ table_name }}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

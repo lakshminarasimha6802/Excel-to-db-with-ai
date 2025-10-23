@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set page_title = "Dashboard" %}
+{% block content %}
+<section class="panel">
+  <h2>Your Tables</h2>
+  {% if tables and tables|length %}
+    <div class="scroll">
+      <table class="table">
+        <thead><tr><th>Table</th><th>Rows</th><th>Actions</th></tr></thead>
+        <tbody>
+          {% for t in tables %}
+          <tr>
+            <td><code>{{ t.name }}</code></td>
+            <td>{{ t.rows }}</td>
+            <td style="white-space:nowrap;">
+              <a class="btn" href="/browse/{{ t.name }}">Browse</a>
+              <a class="btn" href="/insights/{{ t.name }}">Insights</a>
+              <a class="btn" href="/anomalies/{{ t.name }}">Anomalies</a>
+              <a class="btn" href="/export/{{ t.name }}?format=xlsx">Export XLSX</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>No tables yet. Upload a file on Home and import it.</p>
+  {% endif %}
+</section>
+{% endblock %}

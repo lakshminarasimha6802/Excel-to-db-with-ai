@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ title or "Excel → DB" }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">📦 Excel → DB</div>
+    <nav class="menu">
+      <a href="/">Home</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/chat">Chat with Data</a>
+    </nav>
+    <div class="sidebar-footer">
+      <small>© {{ now() if false }}</small>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="main">
+    <header class="topbar">
+      <div class="left">
+        <span class="page-title">{{ page_title or "" }}</span>
+      </div>
+
+      <div class="right">
+        {% if user %}
+          <!-- User dropdown -->
+          <div class="user-menu" id="userMenu">
+            <button type="button" class="avatar-btn" id="userMenuBtn" aria-expanded="false" aria-haspopup="menu" title="{{ user.name }}">
+              <span class="avatar-circle">{{ user.name[:1] | upper }}</span>
+            </button>
+
+            <div class="menu" id="userMenuDropdown" role="menu" aria-labelledby="userMenuBtn">
+              <div class="menu-header">
+                <div class="name">{{ user.name }}</div>
+                <div class="email">{{ user.email }}</div>
+              </div>
+
+              <a class="menu-item" href="/dashboard" role="menuitem">Dashboard</a>
+              <a class="menu-item" href="/" role="menuitem">Home / Uploads</a>
+
+              <form method="post" action="/logout" style="margin:0;" id="logoutForm">
+                <button type="submit" class="menu-item danger" role="menuitem">Log out</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <a class="btn" href="/login">Login</a>
+          <a class="btn primary" href="/register">Register</a>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if message %}
+      <div class="toast {{ level|default('info') }}">{{ message }}</div>
+    {% endif %}
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="container small">
+        Built by <strong>Lakshmi Narasimha Jinkala (Ram)</strong> · FastAPI · Pandas · SQLite.
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- User menu JS -->
+<script>
+  (function () {
+    const btn = document.getElementById('userMenuBtn');
+    const dd  = document.getElementById('userMenuDropdown');
+    const wrap= document.getElementById('userMenu');
+    if (!btn || !dd || !wrap) return;
+
+    function closeMenu() {
+      wrap.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function openMenu() {
+      wrap.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (wrap.classList.contains('open')) closeMenu();
+      else openMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
+    });
+  })();
+</script>
+</body>
+</html>

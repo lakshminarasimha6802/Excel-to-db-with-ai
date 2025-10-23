@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set page_title = "Anomalies: " ~ table_name %}
+{% block content %}
+<section class="panel">
+  <h2>Flagged Rows ({{ total }})</h2>
+  {% if flagged and flagged|length %}
+    <div class="scroll">
+      <table class="table">
+        <thead>
+          <tr>
+            {% for k in flagged[0].keys() %}
+              <th>{{ k }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in flagged %}
+            <tr>
+              {% for v in r.values() %}
+                <td>{{ v }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>No anomalies detected (or no numeric data available).</p>
+  {% endif %}
+</section>
+{% endblock %}
